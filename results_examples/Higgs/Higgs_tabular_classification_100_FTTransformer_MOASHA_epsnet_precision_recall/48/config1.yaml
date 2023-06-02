@@ -1,0 +1,56 @@
+out_name_template: '{dataset_name}_{task_type}_{max_epochs}_{model_class}_{algorithm}_pop{population_size}_{objective}_{mutation}_{metric[name1]}_{metric[name2]}_sync{sync}_1eminus5'
+logs_path: '/export/scratch2/arkadiy/PBAGOM/logs'
+seed: 42
+n_seeds: 10
+dataset_name: Higgs
+dataset_parameters:
+  dataset_path: '/export/scratch1/home/arkadiy/fedmix/tabular-dl-revisiting-models/data/higgs_small'
+
+  train_batch_size: 512
+  test_batch_size: 512
+  n_workers: 2
+  
+  train_size: 80000
+  val_size: 80000
+  
+  policy_type: noaug
+ 
+model_class: FTTransformer
+model_parameters:
+  dropout: 0.0
+
+optimizer:
+  optimizer_name: AdamW
+  lr_value: 1e-5
+  scheduler: none
+  wd_value: 0.0  
+  momentum: 0.9
+  grad_norm: null
+  warmup_epochs: 0
+
+loss:
+  name: WeightedCE
+
+metric:
+  name1: precision
+  name2: recall
+
+search_space_parameters:
+  search_space_type: discrete
+  if_search_augs: false
+  if_search_wd: true
+  if_search_dropout: true
+  if_search_loss: true
+
+task_type: tabular_classification
+
+algorithm: MOASHA
+mutation: PBA
+objective: epsnet
+population_size: 32
+max_epochs: 100
+time_budget: 2300
+steps: 50
+first_epoch: 0
+use_autocast: true
+sync: False

@@ -1,0 +1,52 @@
+out_name_template: '{dataset_name}_{task_type}_{max_epochs}_{model_class}_{algorithm}_{loss[name]}_{search}_{metric[name1]}_{metric[name2]}'
+logs_path: '/export/scratch2/arkadiy/PBAGOM/logs_release'
+seed: 42
+n_seeds: 10
+dataset_name: AdultFairness
+dataset_parameters:
+  dataset_path: '/export/scratch1/home/arkadiy/fedmix/tabular-dl-revisiting-models/data/adult'
+
+  train_batch_size: 512
+  test_batch_size: 512
+  n_workers: 2
+  
+  policy_type: noaug
+
+model_class: FTTransformer
+model_parameters:
+  dropout: 0.0 #default value (might be changed during search)
+
+optimizer:
+  optimizer_name: AdamW
+  lr_value: 1e-4
+  scheduler: none
+  wd_value: 0.0  #value is used if if_search_wd is false
+  momentum: 0 #momentum is not used with AdamW
+
+loss:
+  name: CESPLoss #cross entropy loss with fairness regularizer
+  
+metric:
+  name1: acc #accuracy
+  name2: DSP
+#  name3: DEO #optionally, an additional fairness objective
+
+search_space_parameters:
+  if_search_augs: false
+  if_search_wd: true
+  if_search_dropout: true
+  if_search_loss: true
+
+task_type: fairness
+
+algorithm: BoTorch #RayPBT or MOASHA or MOASHATPE (BO-MO-ASHA)
+search: qnehvi #to use iwth RayPBT: RandomSearch, objective1, objective2, random_scalarization_Parego, max_scalarization_Golovin, epsnet | to use with MOASHA: epsnet | to use with MOASHATPE: HCBSMOTPE
+
+max_epochs: 100
+steps: 50 #number of evaluation steps
+
+parallel_workers_per_gpu: 1 #number of networks to be trained in parallel on each GPU
+use_autocast: true
+
+bo_batches: 3 #total batches of solutions to generate and evaluate after the initial (random) solutions are evaluated
+bo_batch_size: 8 #number of solutions to evaluate in parallel in one batch

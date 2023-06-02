@@ -1,0 +1,57 @@
+out_name_template: '{dataset_name}_{task_type}_batch{dataset_parameters[train_batch_size]}_{max_epochs}_{model_class}{model_parameters[depth]}_{algorithm}_pop{population_size}_{search}_{dataset_parameters[policy_type]}_{mutation}_{metric[name1]}_{metric[name2]}'
+logs_path: '/export/scratch2/arkadiy/PBAGOM/logs_release'
+seed: 42 #first seed in the sequence of runs
+n_seeds: 1 #number of runs to perform, used seeds are [seed, seed+1,seed+n_seeds)
+dataset_name: CelebaFairness
+dataset_parameters:
+  dataset_path: '/export/scratch2/arkadiy/celeba'
+
+  resolution: 32
+  
+  train_batch_size: 128
+  test_batch_size: 1024
+  n_workers: 2
+  
+  policy_type: RandAugment
+
+model_class: WideResNet
+model_parameters:
+  depth: 28
+  widen_factor: 2
+  dropout_rate: 0.0 
+
+optimizer:
+  optimizer_name: SGDNesterov
+  lr_value: 0.1
+  scheduler: cosine
+  wd_value: 5e-4
+  momentum: 0.9
+
+loss:
+  name: CESPLoss #cross entropy loss with fairness regularizer
+  
+metric:
+  name1: acc #accuracy
+  name2: DSP
+  #name3: DEO [optionally, an additional fairness objective]
+
+search_space_parameters:
+  if_search_augs: true
+  if_search_wd: false
+  if_search_dropout: false
+  if_search_loss: true
+
+task_type: fairness
+
+algorithm: RayPBT #RayPBT or MOASHA or MOASHATPE (BO-MO-ASHA)
+search: max_scalarization_Golovin #to use iwth RayPBT: RandomSearch, objective1, objective2, random_scalarization_Parego, max_scalarization_Golovin, epsnet | to use with MOASHA: epsnet | to use with MOASHATPE: HCBSMOTPE
+mutation: PBA #PBA or random
+population_size: 32 
+
+max_epochs: 100 #total number of epochs
+steps: 50 #number of evaluation steps
+
+parallel_workers_per_gpu: 4 #number of networks to be trained in parallel on each GPU
+use_autocast: true #whether to use torch autocast, True is recommended for quicker training
+sync: False #synchronous or asynchrnous PBT, default: asynchronous
+keep_model_files: False #whether to keep trained models on disk

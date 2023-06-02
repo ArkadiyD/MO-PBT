@@ -1,0 +1,53 @@
+out_name_template: '{dataset_name}_{task_type}_{max_epochs}_{model_class}_{algorithm}_{loss[name]}_pop{population_size}_{search}_{mutation}_{metric[name1]}_{metric[name2]}'
+logs_path: '/export/scratch2/arkadiy/PBAGOM/logs_release'
+seed: 42
+n_seeds: 10
+dataset_name: AdultFairness
+dataset_parameters:
+  dataset_path: '/export/scratch1/home/arkadiy/fedmix/tabular-dl-revisiting-models/data/adult'
+
+  train_batch_size: 512
+  test_batch_size: 512
+  n_workers: 2
+  
+  policy_type: noaug
+
+model_class: FTTransformer
+model_parameters:
+  dropout: 0.0 #default value (might be changed during search)
+
+optimizer:
+  optimizer_name: AdamW
+  lr_value: 1e-4
+  scheduler: none
+  wd_value: 0.0  #value is used if if_search_wd is false
+  momentum: 0 #momentum is not used with AdamW
+
+loss:
+  name: CESPLoss #cross entropy loss with fairness regularizer
+  
+metric:
+  name1: acc #accuracy
+  name2: DSP
+  name3: DEO #optionally, an additional fairness objective
+
+search_space_parameters:
+  if_search_augs: false
+  if_search_wd: true
+  if_search_dropout: true
+  if_search_loss: true
+
+task_type: fairness
+
+algorithm: RayPBT #RayPBT or MOASHA or MOASHATPE (BO-MO-ASHA)
+search: epsnet #to use iwth RayPBT: RandomSearch, objective1, objective2, random_scalarization_Parego, max_scalarization_Golovin, epsnet | to use with MOASHA: epsnet | to use with MOASHATPE: HCBSMOTPE
+mutation: PBA #PBA or random
+population_size: 32
+
+max_epochs: 100 #total number of epochs
+steps: 50 #number of evaluation steps
+
+parallel_workers_per_gpu: 4 #number of networks to be trained in parallel on each GPU
+use_autocast: true
+sync: False #synchronous or asynchrnous PBT, default: asynchronous
+keep_model_files: False #whether to keep trained models on disk

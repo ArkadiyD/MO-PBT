@@ -1,0 +1,57 @@
+out_name_template: '{dataset_name}_{task_type}_batch{dataset_parameters[train_batch_size]}_{max_epochs}_{model_class}_{algorithm}_{search}_{dataset_parameters[policy_type]}'
+logs_path: '/export/scratch2/arkadiy/PBAGOM/logs_release'
+seed: 42 #first seed in the sequence of runs
+n_seeds: 1 #number of runs to eprform, used seeds are [seed, seed+1,seed+n_seeds)
+dataset_name: cifar10 #cifar10/cifar100
+dataset_parameters:
+  dataset_path: '/export/scratch2/arkadiy/cifar10'
+  resolution: 32 #standard cifar resolution
+
+  train_batch_size: 128
+  test_batch_size: 128
+  n_workers: 2
+
+  train_size: 40000
+  val_size: 10000
+
+  policy_type: RandAugment #options: RandAugment, PBA
+
+model_class: WideResNet
+model_parameters:
+  depth: 28
+  widen_factor: 2
+  dropout_rate: 0.0
+
+optimizer:
+  optimizer_name: SGDNesterov
+  lr_value: 0.1
+  scheduler: cosine
+  wd_value: 5e-4
+  momentum: 0.9
+
+loss:
+  name: AdvLoss #default choice for adversarial training (TRADES loss)
+  steps: 10 #parameter in the TRADES loss
+
+metric:
+  attack_steps: 20 #number of steps in the FGSM attack
+
+search_space_parameters:
+  if_search_augs: true
+  if_search_wd: false
+  if_search_dropout: false
+  if_search_loss: true
+
+task_type: adv_classification
+
+algorithm: BoTorch #RayPBT or MOASHA or MOASHATPE (BO-MO-ASHA)
+search: qnehvi #to use iwth RayPBT: RandomSearch, objective1, objective2, random_scalarization_Parego, max_scalarization_Golovin, epsnet | to use with MOASHA: epsnet | to use with MOASHATPE: HCBSMOTPE
+
+max_epochs: 100
+steps: 50 #number of evaluation steps
+
+parallel_workers_per_gpu: 1 #number of networks to be trained in parallel on each GPU
+use_autocast: true
+
+bo_batches: 3 #total batches of solutions to generate and evaluate after the initial (random) solutions are evaluated
+bo_batch_size: 8 #number of solutions to evaluate in parallel in one batch

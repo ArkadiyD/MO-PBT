@@ -1,0 +1,53 @@
+out_name_template: '{dataset_name}_{task_type}_{max_epochs}_{model_class}_{algorithm}_{search}_{metric[name1]}_{metric[name2]}'
+logs_path: '/export/scratch2/arkadiy/PBAGOM/logs_release'
+seed: 42
+n_seeds: 3
+dataset_name: Adult #options are Adult, Higgs, ClickPrediction
+dataset_parameters:
+  dataset_path: '/export/scratch1/home/arkadiy/fedmix/tabular-dl-revisiting-models/data/adult'
+
+  train_batch_size: 512
+  test_batch_size: 512
+  n_workers: 2
+  
+  train_size: null #used only if dataset split is not provided (ignored for Adult, Higgs, Click prediction datasets)
+  val_size: null #used only if dataset split is not provided (ignored for Adult, Higgs, Click prediction datasets)
+  
+  policy_type: noaug #no augmentatiosn for tabular data
+ 
+model_class: FTTransformer
+model_parameters:
+  dropout: 0.0 #default value (might be changed during search)
+
+optimizer:
+  optimizer_name: AdamW
+  lr_value: 1e-5
+  scheduler: none
+  wd_value: 0.0  #value is used if if_search_wd is false
+  momentum: 0 #momentum is not used with AdamW
+
+loss:
+  name: WeightedCE
+
+metric:
+  name1: precision
+  name2: recall
+
+search_space_parameters:
+  if_search_augs: false
+  if_search_wd: true
+  if_search_dropout: true
+  if_search_loss: true
+
+task_type: tabular_classification
+
+algorithm: MOASHA #RayPBT or MOASHA or MOASHATPE (BO-MO-ASHA)
+search: epsnet #to use iwth RayPBT: RandomSearch, objective1, objective2, random_scalarization_Parego, max_scalarization_Golovin, epsnet | to use with MOASHA: epsnet | to use with MOASHATPE: HCBSMOTPE
+
+max_epochs: 100
+steps: 50 #number of evaluation steps
+
+time_budget: 3600 #in seconds, is active only for MOASHA and MOASHATPE
+
+parallel_workers_per_gpu: 4 #number of networks to be trained in parallel on each GPU
+use_autocast: true
