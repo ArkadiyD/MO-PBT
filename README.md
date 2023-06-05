@@ -3,7 +3,7 @@ The code for the multi-objective hyperparameter optimization algorithm **MO-PBT*
 
 [Paper](https://arxiv.org/abs/2306.01436)
 
-[Twitter thread]()
+[Twitter thread](https://twitter.com/ADushatskiy/status/1665648894166835203)
 
 ![image info](images/MOPBT.png)
 
