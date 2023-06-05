@@ -1,7 +1,7 @@
 # Multi-Objective Population Based Training (MO-PBT)
 The code for the multi-objective hyperparameter optimization algorithm **MO-PBT**:
 
-[Paper](arxiv.org)
+[Paper](https://arxiv.org/abs/2306.01436)
 
 [Twitter thread]()
 
