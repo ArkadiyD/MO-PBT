@@ -61,5 +61,12 @@ Example of results collection and processing is provided in [Jupyter Notebook](r
 
 ## Bibtex
 ```
-
+@misc{dushatskiy2023multiobjective,
+      title={Multi-Objective Population Based Training}, 
+      author={Arkadiy Dushatskiy and Alexander Chebykin and Tanja Alderliesten and Peter A. N. Bosman},
+      year={2023},
+      eprint={2306.01436},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
 ```
