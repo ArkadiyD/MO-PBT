@@ -61,12 +61,12 @@ Example of results collection and processing is provided in [Jupyter Notebook](r
 
 ## Bibtex
 ```
-@misc{dushatskiy2023multiobjective,
-      title={Multi-Objective Population Based Training}, 
-      author={Arkadiy Dushatskiy and Alexander Chebykin and Tanja Alderliesten and Peter A. N. Bosman},
-      year={2023},
-      eprint={2306.01436},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
+@inproceedings{dushatskiy2023multi,
+  title={Multi-Objective Population Based Training},
+  author={Dushatskiy, Arkadiy and Chebykin, Alexander and Alderliesten, Tanja and Bosman, Peter A.N.},
+  booktitle={International Conference on Machine Learning},
+  pages={8969--8989},
+  year={2023},
+  organization={PMLR}
 }
 ```
